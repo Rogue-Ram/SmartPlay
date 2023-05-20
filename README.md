@@ -21,5 +21,5 @@
 5. Run /SP
 
 
-##Issues & bugs
+## Issues & bugs
 I JUST made this plugin, it may contain issues and bugs! Please report them by creating an issue and I will do my best to fix it!
