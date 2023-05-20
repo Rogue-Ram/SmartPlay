@@ -14,7 +14,7 @@
 
 
 ## Installation and use
-1. Download the SmartPlay.jar file (here)[https://rogueram.club/smartplay].
+1. Download the SmartPlay.jar file [here](https://rogueram.club/smartplay).
 2. Place the .jar file in your server's 'plugins' directory.
 3. Restart your server to enable the plugin.
 4. Create your questions via the question generator and paste the output in the questions.json file located in the plugin's folder.
