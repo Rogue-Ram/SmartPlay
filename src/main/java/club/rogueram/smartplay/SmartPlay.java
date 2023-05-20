@@ -1,6 +1,7 @@
 package club.rogueram.smartplay;
 
 import club.rogueram.smartplay.commands.AskQuestionCommand;
+import club.rogueram.smartplay.commands.reload;
 import club.rogueram.smartplay.events.PlayerEvents;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.spigotmc.*;
 import java.io.*;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +35,8 @@ public class SmartPlay extends JavaPlugin implements Listener {
     private final List<String> wrongQuestions = new ArrayList<>();
     public final Set<String> activePlayers = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Random random = new Random();
+    public Boolean started = false;
+    public BukkitTask task;
     public Boolean questionsProvided = false;
     @Override
     public void onEnable() {
@@ -40,23 +44,20 @@ public class SmartPlay extends JavaPlugin implements Listener {
         getLogger().info("SmartPlay has been enabled!");
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
         this.getCommand("askquestion").setExecutor(new AskQuestionCommand(this));
+        this.getCommand("smreload").setExecutor(new reload(this));
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerEvents(this), this);
-        try {
-            TimeUnit.SECONDS.sleep(3);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+    }
+    public void start(){
         getLogger().info("Starting questions...");
-        new BukkitRunnable() {
+         task= new BukkitRunnable() {
             @Override
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     questionCountdown(player);
                 }
             }
-        }.runTaskTimer(this, 0L, 20L * 60L * random.nextInt((5 - 3) + 1)+3);
+        }.runTaskTimer(this, 0L, 20L * 60L * 5);
     }
-
     @Override
     public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
@@ -70,17 +71,33 @@ public class SmartPlay extends JavaPlugin implements Listener {
             dataFolder.mkdir();
         }
 
-
         File jsonFile = new File(dataFolder, "questions.json");
         if (jsonFile.exists()) {
             try {
+                questionsProvided = true;
                 Gson gson = new Gson();
                 Type collectionType = new TypeToken<Collection<Map<String, String>>>(){}.getType();
                 Collection<Map<String, String>> json = gson.fromJson(new FileReader(jsonFile), collectionType);
-                for (Map<String, String> map : json) {
-                    questionAnswerMap.put(map.get("question"), map.get("answer"));
+                if (json != null) {
+                    for (Map<String, String> map : json) {
+                        if(map != null) {
+                            String question = map.get("question");
+                            String answer = map.get("answer");
+                            if(question != null && answer != null) {
+                                questionAnswerMap.put(question, answer);
+                            } else {
+                                getLogger().info("Invalid question or answer in map: " + map);
+                                questionsProvided = false;
+                            }
+                        } else {
+                            questionsProvided = false;
+                            getLogger().info("Null map in JSON collection");
+                        }
+                    }
+                } else {
+                    questionsProvided = false;
+                    getLogger().info("Failed to deserialize JSON file: " + jsonFile.getPath());
                 }
-                questionsProvided = true;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -89,6 +106,7 @@ public class SmartPlay extends JavaPlugin implements Listener {
             setupDefaultQuestions(jsonFile);
         }
     }
+
 
     private void setupDefaultQuestions(File jsonFile) {
         try {
@@ -135,7 +153,7 @@ public class SmartPlay extends JavaPlugin implements Listener {
     public void questionCountdown(Player player){
         if (questionsProvided == false) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.RED + "Could not load questions!"));
-            player.sendMessage(ChatColor.RED + "Could not load questions! See https://rogueram.com/smartplay for more info.");
+            player.sendMessage(ChatColor.RED + "Could not load questions! See https://rogueram.club/smartplay for more info.");
             return;
         }
         new BukkitRunnable() {
@@ -191,7 +209,7 @@ public class SmartPlay extends JavaPlugin implements Listener {
                             .anyMatch(word -> correctWords.contains(word));
 
                     if (isCorrect) {
-                        playerExecutor.getPlayer().sendMessage(ChatColor.GREEN + "Correct!\n" + question + answer);
+                        playerExecutor.getPlayer().sendMessage(ChatColor.GREEN + "Correct!\n" + question +": "+ answer);
                         wrongQuestions.remove(question);
                         new BukkitRunnable() {
                             int counter = 3;
