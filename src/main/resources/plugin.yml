@@ -2,3 +2,8 @@ name: SmartPlay
 version: '${project.version}'
 main: club.rogueram.smartplay.SmartPlay
 api-version: 1.19
+commands:
+  askquestion:
+    description: Trigger a new question.
+  smreload:
+    description: Reload the questions.
