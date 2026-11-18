@@ -1,0 +1,38 @@
+# Toutes les durees sont en secondes. Les valeurs sont bornees par le plugin.
+automatic:
+  enabled: true
+  interval-seconds: 300 # 10 a 86400 ; premiere question apres cet intervalle
+countdown-seconds: 10 # 0 a 300
+answer-timeout-seconds: 60 # 0 desactive la limite ; maximum 3600
+recovery-seconds: 3 # 0 a 30
+freeze-radius: 10 # 0 desactive le gel ; maximum 64 blocs dans chaque axe
+ignore-accents: true
+# Fermer le questionnaire ou depasser le delai compte comme une erreur.
+# Passer a false pour un apprentissage sans penalite mortelle.
+kill-on-wrong-answer: true
+
+messages:
+  prefix: '&8[&bSmartPlay&8] &r'
+  gui-title: 'Votre reponse ?'
+  answer-label: '&bSaisissez votre reponse'
+  question: '&bQuestion : &f{question}'
+  countdown: '&eProchaine question dans {seconds} s'
+  recovery: '&aReprise dans {seconds} s'
+  correct: '&aBonne reponse ! &7{answer}'
+  incorrect: '&cReponse incorrecte ou questionnaire ferme. &fReponse : {answer}'
+  timeout: '&cTemps ecoule ! &fReponse : {answer}'
+  empty-answer: '&eSaisissez une reponse avant de valider.'
+  already-active: '&eVous avez deja une question ou un compte a rebours en cours.'
+  ineligible: '&eVous ne pouvez pas participer dans votre etat actuel ou avec vos permissions.'
+  no-questions: '&cAucune question valide. Contactez un administrateur.'
+  gui-error: '&cLe questionnaire ne peut pas etre ouvert. Votre session a ete liberee.'
+  no-permission: '&cVous ne disposez pas de la permission necessaire.'
+  player-only: '&cCette commande doit etre executee par un joueur.'
+  reloaded: '&aQuestions et configuration rechargees.'
+  reload-failed: '&cQuestions ou configuration invalides : anciennes donnees conservees. Consultez la console.'
+  started: '&aQuestions automatiques activees.'
+  stopped: '&eQuestions automatiques arretees et sessions annulees.'
+  status: '&bQuestions : {questions} &7| Sessions : {sessions} | Automatique : {automatic}'
+  stats: '&aBonnes : {correct} &7| &cErreurs : {incorrect} &7| A revoir : {review}'
+  help: '&b/sp ask &7: une question | &b/sp stats &7: statistiques de connexion'
+  help-admin: '&b/sp reload &7| &b/sp start &7| &b/sp stop &7| &b/sp status'
