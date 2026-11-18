@@ -1,9 +1,29 @@
 name: SmartPlay
 version: '${project.version}'
 main: club.rogueram.smartplay.SmartPlay
-api-version: 1.19
+api-version: '1.19'
+description: Transforme les sessions Minecraft en seances de revision.
 commands:
+  smartplay:
+    description: Aide, questions, statistiques et administration de SmartPlay.
+    aliases: [sp]
+    usage: /<command> [ask|stats|help|reload|start|stop|status]
   askquestion:
     description: Trigger a new question.
+    permission: smartplay.play
   smreload:
     description: Reload the questions.
+    permission: smartplay.reload
+permissions:
+  smartplay.play:
+    description: Participer aux questions et consulter ses statistiques.
+    default: true
+  smartplay.reload:
+    description: Recharger les questions et la configuration.
+    default: op
+  smartplay.admin:
+    description: Demarrer et arreter les questions automatiques.
+    default: op
+  smartplay.bypass:
+    description: Ne pas participer aux questions, meme en mode manuel.
+    default: false

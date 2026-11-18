@@ -1,0 +1,16 @@
+[
+  {
+    "question": "Combien font 7 x 8 ?",
+    "answer": "56",
+    "answers": ["cinquante-six", "cinquante six"]
+  },
+  {
+    "question": "Quelle est la capitale de la France ?",
+    "answer": "Paris"
+  },
+  {
+    "question": "Quel gaz les plantes absorbent-elles pendant la photosynthese ?",
+    "answer": "dioxyde de carbone",
+    "answers": ["CO2", "CO\u2082", "le dioxyde de carbone"]
+  }
+]
